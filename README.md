@@ -19,11 +19,17 @@ Java8
 Maven
 SpringBoot
 JPA
-BD:H2
+Base de datos
+*H2
+Programas:
+*IntelliJ
+*VisualStudioCode
+
+Capturas del sistemas.
 
 Menu principal
 
-![image](https://user-images.githubusercontent.com/63264380/141693668-3bd1c598-bbd4-48b4-9ae2-c67897a80c39.png)
+![image](https://user-images.githubusercontent.com/63264380/141693983-06359e01-ce7f-475f-a71b-2bd353a7acd4.png)
 
 Creacion de Campaña
 
@@ -45,5 +51,6 @@ Pantalla para armar envio de solicitud mediante .csv
 
 Pantalla que llega a referente o proveedor cuando entra a link
 
+![image](https://user-images.githubusercontent.com/63264380/141694011-28f139a5-dafa-4dbc-a32d-4113dbe77c01.png)
 
 
