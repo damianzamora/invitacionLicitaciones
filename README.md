@@ -1,4 +1,4 @@
-# invitacionLicitaciones
+# invitacion a licitaciones
 
 Proyecto web ,el cual permite el manejo de invitaciones de proveedores a campañas, compra o licitacion.
 
