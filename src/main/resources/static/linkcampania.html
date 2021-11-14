@@ -1,0 +1,99 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Link Invitacion</title>
+    <link rel="stylesheet" href="css/index.css">    
+	<!--font-->
+	<link href="https://fonts.gstatic.com" rel="dns-prefetch">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.1/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-+0n0xVW2eSR5OomGNYDnhzAbDsOXxcvSN1TPprVMTNDbiYZCxYbOOl7+AMvyTG2x" crossorigin="anonymous">
+</head>
+<body id="app">
+    <header class="header">
+        <div class="container">
+            <div class="row">
+                <div class="cohort col-md-12">
+                    <div>                        
+                        <p style="font-size: 10px; line-height: 1.5;  margin: 0;">&nbsp;</p>    
+						<p style="font-size: 10px; line-height: 1.5;  margin: 0;">&nbsp;</p>                
+                        <h2 class="d-flex justify-content-center">Solicitud de Campañas</h2>
+                    </div>
+                </div>
+    </header>
+    <main >
+        <div class="container">
+        <div class="divManagerPrincipal">
+		<template v-if="campaniaDelProveedor">	
+            <div class="divAddUpload">
+                <h2 class="component-title-large__text text-center">Bienvenido {{campaniaDelProveedor.referente.nombre}} </h2>
+				<p style="font-size: 10px; line-height: 1.5;  margin: 0;">&nbsp;</p>
+                <h3 class="component-title__text text-center">Visualice y descargue los detalles de la campaña</h3>                
+            </div>
+            <div class="divManagerMerch">		
+                    <div class="split"></div> 
+                    <section class="component component-html">
+					<p style="font-size: 10px; line-height: 1.5;  margin: 0;">&nbsp;</p>    
+					<p style="font-size: 10px; line-height: 1.5;  margin: 0;">&nbsp;</p>   
+                    <table class="table" >
+                        <tbody>
+                            <tr>                               
+                                <th class="text-center">Nombre de Campaña</th>                   
+								<th class="text-center">Descripcion</th>  
+                                <th></th>                                                                            
+                            </tr>                                              
+                            <tr >                                
+                                <td class="text-center">{{campaniaDelProveedor.campania.titulo}}</td>                          
+                                <td class="text-center">{{campaniaDelProveedor.campania.descripcion}}</td>   
+                                <td class="component component-btn text-right" style="padding-bottom: 2rem !important"><button class="btn btn-primary" type="button" @click="generarPDF()">Descargar PDF</button></td>    
+                            </tr>
+                         </tbody>
+                    </table>
+                    </section>                                 
+            </div>
+		</template>
+		<template v-else>
+			<div class="divCards d-flex flex-column align-items-center">
+				<p style="font-size: 10px; line-height: 1.5;  margin: 0;">&nbsp;</p>  
+				<div class="text-center">
+					<span>Licitación no encontrada, puede que haya expirado, por favor haga contacto a administracion via mail.</span>
+					<p style="font-size: 10px; line-height: 1.5;  margin: 0;">&nbsp;</p> 
+					<span>administracion@prueba.com</span>
+				</div>                                    
+			</div>    
+		</template>
+        </div> 
+    </div>
+    </main>
+    <footer>
+        <div class="footer-bottom">
+            <div class="container">
+                <div class="row">
+                    <div class="cohort col-md-12">
+                        <div class="footer-site-info">2021 © <a href="https://github.com/damianzamora"
+                                target="_blank">Zamora Damian</a></div>
+                    </div>
+                    <div class="col-md-12">
+                        <div id="footer-navigation" class="site-navigation footer-navigation centered-box"
+                            role="navigation">
+                            <ul id="footer-menu" class="nav-menu styled clearfix inline-inside">                                
+                                <li id="menu-item-27"
+                                    class="menu-item menu-item-type-custom menu-item-object-custom menu-item-27">
+                                    <a href="damian.zamora@hotmail.com">Contact Me</a>
+                                </li>
+                            </ul>
+                        </div>
+                    </div>                    
+                </div>
+            </div>
+        </div>
+    </footer>    
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.1/dist/js/bootstrap.bundle.min.js" integrity="sha384-gtEjrD/SeCtmISkJkNUaaKMoLD0//ElJ19smozuHV6z3Iehds+3Ulb9Bn9Plx0x4" crossorigin="anonymous"></script>
+    <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
+	<script src="//cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+    <script src="https://unpkg.com/vue@next"></script>
+    <script src="js/linkcampania.js"></script>   
+</body>
+</html>
+

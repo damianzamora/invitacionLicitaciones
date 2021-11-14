@@ -1,0 +1,82 @@
+* {
+    margin: 0;
+    padding: 0;
+}
+
+table,label,tr,td,h2,h3{
+    color:blanchedalmond;
+}
+
+
+
+main {
+    min-height: 100vh ;
+    width: 100% ;
+    background-color: black;
+    
+}
+
+.divManagerPrincipal{
+    width: 100%;
+    min-height: 100%;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    background-color: black;
+}
+
+.divAddUpload{
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    width: 100%;
+    gap:0.5em;
+    padding: 1em;
+}
+
+
+.divManagerMerch{
+    width: 100%;
+    min-height: 30vh;
+    gap:1em;
+    display: flex;
+    flex-direction: column;
+    gap:0.5em;
+}
+
+.labelForm{
+    width: 5em;
+}
+
+.labelDiv{
+    width: 40%;
+}
+
+.inputDiv{
+    width: 50%;
+}
+
+.divAdd{
+    display: flex;    
+    justify-content: center;
+    align-items: center;
+    width: 50%;    
+}
+
+.selectManager{
+    display: flex;
+    justify-content: center;
+    width: 25%;
+    gap:0.5em;
+}
+
+.formAdd{
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    width: 100%;
+    gap:1.5em;
+    padding:5em;
+}

@@ -1,0 +1,3 @@
+dami.zamora@gmail.com,Telefonia SRL;
+damian.zamora@hotmail.com,Lopez y Familia S.A;
+example@example.com,Comunicaciones;

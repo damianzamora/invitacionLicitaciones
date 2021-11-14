@@ -1,0 +1,209 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Panel</title>
+    <link rel="stylesheet" href="css/index.css">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.1/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-+0n0xVW2eSR5OomGNYDnhzAbDsOXxcvSN1TPprVMTNDbiYZCxYbOOl7+AMvyTG2x" crossorigin="anonymous">
+</head>
+<body id="app">
+    <header >
+        
+    </header>
+    <main >
+        <div class="divManagerPrincipal">
+            <div class="divAddUpload">
+                <label for="">Selecciona una opcion</label>
+                <select class="selectManager " v-model="optionTipo"> 
+                    <option  value="campañas">Campañas</option>  
+                    <option  value="proveedores">Proveedores</option> 
+                    <option  value="proveedoresCampañas">Campañas enviadas</option>  
+                    <option  value="Enviar">Envio de Campañas</option>                 
+                 </select>
+            </div>
+            <div class="divManagerMerch" v-show="optionTipo==='campañas'">
+                <div class="divAddUpload">
+                    <label for="">Selecciona opcion para Campaña</label>
+                    <select class="selectManager " v-model="campañaTipo">   
+                        <option  value="Agregar">Agregar una campaña</option>
+                        <option  value="Listar">Mostrar campañas</option>
+                                                    
+                     </select>
+                </div>
+                <form class="formAdd" v-show="campañaTipo==='Agregar'"  @submit.prevent="agregarCampaña" >
+                    <div class="divAdd">
+                        <label class="labelDiv">Nombre de campaña</label>
+                        <input class="inputDiv" v-model="nombreCampaña" id="nombreCampaña" name="nombreCampaña" required maxlength="20"></input>
+                    </div>
+                    <div class="divAdd">
+                        <label class="labelDiv">Descripcion</label>
+                        <input class="inputDiv" v-model="descripcionCampaña" id="descripcionCampaña" name="descripcionCampaña" required maxlength="20">
+                    </div>
+                    <div class="divAdd text-center">
+                        <button class="btn btn-secondary btn-sm mt-2" type="submit">Agregar campaña</button>
+                    </div>
+                </form>
+                <div class="formAdd" v-show="campañaTipo==='Listar'"  >
+                    <template v-if="campañas.length > 0">
+                        <table class="table table-striped w-100" >
+                            <thead >
+                                <tr>  
+                                    <th class="text-center">Nombre de Campaña</th>                   
+                                    <th class="text-center">Descripcion</th>  
+                                    <th></th> 
+                                </tr>                                               
+                            </thead>
+                            <tbody>
+                                <tr v-for="campaña in campañas">                                        
+                                    <td data-label="Comment" class="text-center">{{campaña.titulo}}</td>                          
+                                    <td data-label="Comment" class="text-center">{{campaña.descripcion}}</td>  
+                                    <td data-label="Accion"class="text-center"><button class="btn btn-secondary btn-sm" type="button" @click="generarPDF(campaña)">Descargar PDF</button></td>                                           
+                                </tr>
+                            </tbody>
+                        </table>
+                    </template>
+                    <template v-else>
+                        <div class="divCards d-flex flex-column align-items-center">
+                            <div class="text-center"><h2>No hay campañas disponibles.</h2></div>                                    
+                        </div>    
+                    </template>
+                </div>
+            </div> 
+            <div class="divManagerMerch" v-show="optionTipo==='proveedores'">                        
+                <template v-if="proveedores.length > 0">
+                    <table class="table table-striped w-100" >
+                        <thead >
+                            <tr>
+                                <th class="text-center">Nombre Proveedor</th>
+                                <th class="text-center">Email Proveedor</th>
+                                                                                                               
+                            </tr>                                               
+                        </thead>
+                        <tbody>
+                            <tr v-for="proveedor in proveedores">
+                                <td data-label="User"class="text-center">{{proveedor.nombre}}</td>
+                                <td data-label="Comment" class="text-center">{{proveedor.email}}</td>                                              
+                                
+                            </tr>
+                         </tbody>
+                    </table>
+                </template>
+                <template v-else>
+                    <div class="divCards d-flex flex-column align-items-center">
+                        <div class="text-center"><h2>No hay proveedores</h2></div>                                    
+                    </div>    
+                </template>                        
+             </div>
+              <div class="divManagerMerch" v-show="optionTipo==='proveedoresCampañas'">                        
+                 <template v-if="campañasProveedores.length > 0">
+                    <table class="table table-striped w-100" >
+                        <thead >
+                            <tr>                                
+                                <th class="text-center">Nombre de Campaña</th>
+                                <th class="text-center">Nombre de proveedor</th>
+                                <th class="text-center">Fecha Generado</th>
+                                <th class="text-center">Fecha Visitado</th>
+                                <th class="text-center">Fecha Descargado</th>
+                                <th class="text-center">Descargado por proveedor</th>                                                                             
+                            </tr>                                               
+                        </thead>
+                        <tbody>
+                            <tr v-for="campañaProveedor in campañasProveedores">
+                                
+                                <td data-label="Comment" class="text-center">{{campañaProveedor.campaña.titulo}}</td>  
+                                <td data-label="Comment" class="text-center">{{campañaProveedor.proveedor.nombre}}</td>  
+                                <td data-label="User"class="text-center">{{campañaProveedor.fechaGenerado}}</td>
+                                <td data-label="User"class="text-center">{{campañaProveedor.fechaVisitado}}</td>
+                                <td data-label="Comment" class="text-center">{{campañaProveedor.fechaDescargado}}</td>                                              
+                                <td data-label="Comment" class="text-center">{{campañaProveedor.descargado}}</td>
+                            </tr>
+                         </tbody>
+                    </table>
+                </template>
+                <template v-else>
+                    <div class="divCards d-flex flex-column align-items-center">
+                        <div class="text-center"><h2>No se han enviado campañas a proveedores todavia..</h2></div>                                    
+                    </div>    
+                </template>                       
+             </div> 
+             <div class="divManagerMerch" v-show="optionTipo==='Enviar'">      
+                <form class="formAdd"  @submit.prevent="enviarCampañasPorMail" >
+                    <div class="divAdd">
+                        <label class="labelDiv">Seleccionar campaña</label>
+                        <select class="inputDiv" v-model="campañaSeleccionada">   
+                            <option class="inputDiv" value="">Campañas</option>
+                            <option class="inputDiv" v-for="campaña in campañas">{{campaña.titulo}}</option>
+                        </select>
+                    </div>
+                    <div class="divAdd">
+                        <label class="labelDiv">Ingrese asunto</label>
+                        <input class="inputDiv" v-model="asuntoMail" id="asuntoMail" name="asuntoMail" required maxlength="25"></input>
+                    </div>
+                    <div class="divAdd">
+                        <label class="labelDiv">Ingrese cuerpo de mail</label>
+                        <input class="inputDiv" v-model="cuerpoMail" id="cuerpoMail" name="cuerpoMail" required maxlength="200"></input>
+                    </div>
+                    
+                    <template v-if="proveedores.length > 0">
+                        <table class="table table-striped w-50" >
+                            <thead >
+                                <tr>
+                                    <th class="text-center">Nombre Proveedor</th>
+                                    <th class="text-center">Email Proveedor</th>        
+                                                                                                           
+                                </tr>                                               
+                            </thead>
+                            <tbody>
+                                <tr v-for="proveedor in proveedores">                                      
+                                        <td data-label="User"class="text-center">{{proveedor.nombre}}</td>
+                                        <td data-label="Comment" class="text-center">{{proveedor.email}}</td>                                            
+                                        <td data-label="Accion"class="text-center"><button class="btn btn-secondary btn-sm" type="button" @click="agregarProveedor(proveedor)">Agregar proveedor</button></td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </template>
+                    <template v-else>
+                        <div class="divCards d-flex flex-column align-items-center">
+                            <div class="text-center"><h2>No hay proveedores para seleccionar</h2></div>                                    
+                        </div>    
+                    </template>                 
+                        <template v-if="proveedoresSeleccionadosArr.length > 0">
+                            <table class="table table-striped w-50" >
+                                <thead >
+                                    <tr>
+                                        <th class="text-center">Proveedores agregados</th>                                                                                                                        
+                                    </tr>                                               
+                                </thead>
+                                <tbody>
+                                    <tr v-for="proveedorAgregado in proveedoresSeleccionadosArr">                                      
+                                            <td data-label="User"class="text-center">{{proveedorAgregado}}</td>                                                                                   
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </template>
+                        <template v-else>
+                            <div class="divCards d-flex flex-column align-items-center">
+                                <div class="text-center"><h2>No hay proveedores agregados.</h2></div>                                    
+                            </div>    
+                        </template>
+                        <div class="divAdd text-center">
+                            <button class="btn btn-secondary btn-sm mt-2" type="submit">Enviar campaña</button>
+                        </div>
+                        
+               </form>         
+            </div>   
+        </div> 
+
+    </main>
+    
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.1/dist/js/bootstrap.bundle.min.js" integrity="sha384-gtEjrD/SeCtmISkJkNUaaKMoLD0//ElJ19smozuHV6z3Iehds+3Ulb9Bn9Plx0x4" crossorigin="anonymous"></script>
+    <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
+    <script src="//cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+    <script src="https://unpkg.com/vue@next"></script>
+    <script src="js/campaña.js"></script>    
+</body>
+</html>
+

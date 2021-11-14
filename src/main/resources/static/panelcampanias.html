@@ -1,0 +1,454 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Web Envio licitaciones-Demo</title>
+    <link rel="stylesheet" href="css/index.css">  
+	<!--font-->
+	<link href="https://fonts.gstatic.com" rel="dns-prefetch">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.1/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-+0n0xVW2eSR5OomGNYDnhzAbDsOXxcvSN1TPprVMTNDbiYZCxYbOOl7+AMvyTG2x" crossorigin="anonymous">
+    <link href="./css/plantilla279.css" rel="stylesheet" type="text/css">
+</head> 
+
+<body id="app">
+    <header class="header">
+        <div class="container">
+            <div class="row">
+                <div class="cohort col-md-12">
+                    <div>       
+                        <p style="font-size: 10px; line-height: 1.5;  margin: 0;">&nbsp;</p>                 
+                        <h2 class="d-flex justify-content-center">Solicitud de Campañas</h2>
+                    </div>
+                </div>
+    </header>
+<main >
+    <div class="container">
+            <p style="font-size: 10px; line-height: 1.5;  margin: 0;">&nbsp;</p> 
+            <p style="font-size: 10px; line-height: 1.5;  margin: 0;">&nbsp;</p> 
+            <div class="form-group">                                
+                <label >Seleccione una opción</label>
+                <select class="form-select form-select-lg mb-3" v-model="optionTipo"> 
+                    <option value="campanias">Campañas</option>  
+                    <option value="referentes">Referentes</option> 
+                    <option value="campaniasReferentes">Campañas enviadas</option>  
+                    <option value="Enviar">Envío de Campañas</option>                 
+                 </select>
+            </div>
+            <div class="form-group" v-show="optionTipo==='campanias'">                
+                    <label >Seleccione opción para Campaña</label>
+                    <select class="form-select form-select-sm" v-model="campaniaTipo">   
+                        <option  value="Agregar">Agregar una campaña</option>
+                        <option  value="Listar">Mostrar campañas</option>                                                    
+                     </select>                
+                <form class="divSecciones" v-show="campaniaTipo==='Agregar'"  @submit.prevent="agregarCampania" >
+                    <div class="input-group mb-3">
+                        <div class="input-group-prepend"> 
+                            <span class="input-group-text" for="nombreCampania">Nombre de campaña</span>   
+                        </div>    
+                        <input type="text" class="form-control" v-model="nombreCampania" id="nombreCampania" name="nombreCampania" required maxlength="30">
+                    </div>                    
+                    <div class="input-group mb-3"> 
+                        <div class="input-group-prepend">                      
+                            <span class="input-group-text" for="descripcionCampania">Descripción</span>
+                        </div>                         
+                        <input type="text" class="form-control" v-model="descripcionCampania" id="descripcionCampania" name="descripcionCampania" required maxlength="60">
+                    </div>                    
+                        <div class="input-group">                    
+                            <div class="input-group"> 
+                                <span class="input-group-text">Subir Archivo de la campaña (.PDF)</span>
+                            </div>
+                        </div>    
+                            <div class="custom-file">  
+                                <input class="form-control" type="file" id="fileCampania" ref="fileCampania" v-on:change="validarExtensionArchivoAgregarCampania()" required>
+                                                                                              
+                            </div>  
+                            
+                            
+                    <div class="d-flex justify-content-end">
+                        <button type="submit" class="btn btn-primary"><span>Crear Campaña</span></button>
+                    </div>                    
+                </form>
+                <div class="form-group" v-show="campaniaTipo==='Listar'"  >
+                    <template v-if="campanias.length > 0" >                        
+                            <table class="table m-5" >
+                                <tbody>
+                                    <tr>  
+                                        <th class="text-center">Nombre de Campaña</th>                   
+                                        <th class="text-center">Descripción</th>  
+                                        <th></th> 
+                                    </tr>                                             
+                                    <tr v-for="campania in campanias">                                        
+                                        <td class="text-center">{{campania.titulo}}</td>                          
+                                        <td class="text-center">{{campania.descripcion}}</td>  
+                                        <td class="d-flex justify-content-center" style="padding: 0.6rem 2rem;display:inline"><button class="btn btn-primary" type="button" @click="generarPDF(campania)">Descargar PDF</button></td>                                           
+                                    </tr>
+                                </tbody>
+                            </table>                        
+                    </template>
+                    <template v-else>
+                        <div class="divCards d-flex flex-column align-items-center m-5">
+                            <div class="text-center"><span class="input-group-text">No hay campañas disponibles.</span></div>                                    
+                        </div>    
+                    </template>
+                </div>
+            </div> 
+            <div class="divSecciones" v-show="optionTipo==='referentes'">  
+                <div class="input-group text-center d-flex w-100" >
+                    <input class="form-control  text-center " v-model="aFiltrarReferente" type="text"
+                         id="aFiltrarReferente" name="aFiltrarReferente" placeholder="buscar por nombre o email" required maxlength="40">                        
+                </div>
+                <div class="filtrosSeccion2" style="width: 100% !important">
+                    <button type="button" class="btn btn-primary"  @click="filtrarReferente"><span>Buscar</span></button>
+                    <button type="button" class="btn btn-primary"  @click="resetReferente">Reset</button>
+                </div>                        
+                <template v-if="referentes.length > 0">                    
+                    <table class="table" >
+                        <tbody>
+                            <tr>
+                                <th class="text-center">Nombre Referente</th>
+                                <th class="text-center">Email Referente</th>                                                                                                               
+                            </tr>                                              
+                            <tr v-for="referente in referentes">
+                                <td class="text-center">{{referente.nombre}}</td>
+                                <td class="text-center">{{referente.email}}</td>                                                                 
+                            </tr>
+                         </tbody>
+                    </table>                    
+                </template>
+                <template v-else>
+                    <div class="divCards d-flex flex-column align-items-center m-5">
+                        <div class="text-center"><span class="input-group-text">No hay referentes disponibles</span></div>                                    
+                    </div>    
+                </template>                        
+            </div>
+            <div class="divSecciones" v-show="optionTipo==='campaniasReferentes'">
+                <div class="d-flex  w-100">
+                    <!-- Filtro de busqueda por campaña existente -->
+                    <div class="filtrosSeccion1">
+                        <div class="input-group">
+                            <div class="input-group-prepend">
+                                <span class="input-group-text">Seleccionar campaña</span>
+                            </div>                       
+                            <select class="form-select" v-model="campaniaReferenteFiltroCampaniaSeleccionada">  
+                                <option  v-for="campania in campanias">{{campania.titulo}}</option>
+                            </select>
+                        </div>
+                        <!-- Filtro de busqueda por texto -->
+                        <div class="input-group text-center" >
+                            <input class="form-control  text-center w-25" v-model="campaniaReferenteFiltroPorReferente" type="text"
+                                id="aFiltrarCampaniaReferente" name="aFiltrarCampaniaReferente" placeholder="buscar por email referente"  maxlength="40">                       
+                        </div>
+                    </div>
+                    <!-- Botones para Filtro de busqueda -->
+                    <div class="filtrosSeccion2">
+                        <div>                            
+                            <button type="button" class="btn btn-primary"  @click="filtrarCampaniaReferente">Buscar</button>                             
+                         </div>   
+                        <div>                            
+                            <button type="button" class="btn btn-primary"  @click="resetCampaniaReferente">Resetear</button>                             
+                        </div>                   
+                    </div>    
+                </div>
+                 <template v-if="campaniasReferentes.length > 0">                  
+                        <table class="table" >
+                            <tbody>
+                                <tr>                                
+                                    <th class="text-center">Nombre de Campaña</th>
+                                    <th class="text-center">Email de referente</th>
+                                    <th class="text-center">Fecha Generado</th>
+                                    <th class="text-center">Fecha Visitado</th>
+                                    <th class="text-center">Fecha Descargado</th>
+                                    <th class="text-center">Descarga PDF enviado</th>                                                                             
+                                </tr>                                              
+                                <tr v-for="campaniaReferente in campaniasReferentes">                                
+                                    <td class="text-center">{{campaniaReferente.tituloCampania}}</td>  
+                                    <td class="text-center">{{campaniaReferente.emailReferente}}</td>
+                                    <td class="text-center">{{formatDate(campaniaReferente.fechaGenerado)}}</td>
+                                    <td class="text-center">{{formatDate(campaniaReferente.fechaVisitado)}}</td>
+                                    <td class="text-center">{{formatDate(campaniaReferente.fechaDescargado)}}</td>                                              
+                                    <td class="text-center">{{campaniaReferente.descargado}}</td>
+                                </tr>
+                            </tbody>
+                        </table>                    
+                </template>
+                <template v-else>
+                    <div class="divCards d-flex flex-column align-items-center m-5">
+                        <div class="text-center"><span class="input-group-text">Por favor seleccione un filtro para buscar campañas enviadas.</span></div>                                    
+                    </div>    
+                </template>                       
+            </div> 
+            <div class="divSecciones" v-show="optionTipo==='Enviar'">      
+                <form  @submit.prevent="enviarCampaniasPorMailOpcion1" >
+                    <div class="input-group mb-3">
+                        <div class="input-group-prepend">
+                            <span class="input-group-text">Seleccionar campaña</span>
+                        </div>                       
+                        <select class="form-select" v-model="campaniaSeleccionada">  
+                            <option  v-for="campania in campanias">{{campania.titulo}}</option>
+                        </select>
+                    </div>                    
+                    <div class="input-group mb-3">
+                        <div class="input-group-prepend">
+                            <span class="input-group-text">Asunto</span>
+                        </div>                        
+                        <input class="form-control" v-model="asuntoMail" id="asuntoMail" name="asuntoMail" required maxlength="25">
+                    </div>                    
+                    <div class="input-group mb-3">
+                        <div class="input-group-prepend">
+                            <span class="input-group-text">Cuerpo de mail</span>
+                        </div>                        
+                        <textarea class="form-control" v-model="cuerpoMail" id="cuerpoMail" name="cuerpoMail" aria-label="Cuerpo de mail" maxlength="500"></textarea>
+                    </div>
+                    <div class="split"></div>
+                    <div class="input-group mb-3">
+                        <div class="input-group-prepend">
+                            <label class="input-group-text">Selecione opción para ingresar destinatarios</label>
+                        </div>
+                        <select class="form-select" v-model="tipoIngresoReferentes">
+                            <option selected="">Elegir...</option>
+                            <option value="csv">Mediante Archivo CSV</option>
+                            <option value="mail">Ingreso de email</option>                            
+                        </select>
+                    </div>
+                <div class="divSeccionesCSV" v-show="tipoIngresoReferentes==='csv'" v-on:click="previsualizacionNo()">  
+                        <div class="input-group mb-3">
+                            <div class="input-group">                                
+                                <input type="file" class="form-control"  id="file" ref="file" v-on:change="validarExtensionArchivoEnvioCampanias()">
+                            </div>  
+                        </div>                        
+                        <div class="alert alert-success" role="alert">
+                            <h4 class="alert-heading">Formato archivo csv</h4>
+                            <p>Para continuar con el proceso deberá ingresar un archivo con datos de referentes para validarlo</p>
+                            <p>Este deberá contener email y nombre del proveedor, ambos son datos obligatorios</p>
+                            <hr>
+                            <p class="mb-0">Click en Informativo para instructivo de como generar archivo.</p>
+                            <div class="d-flex justify-content-end" >
+                                <button type="button" data-bs-toggle="modal" data-bs-target="#modalExplicativo" class="btn btn-primary"><span>Informativo</span></button>
+                            </div>
+                        </div>                        
+                        <div class="BotonesEnvio">
+                            <div>
+                                <div v-if="file">
+                                    <button v-on:click="validarArchivoInput()" target="_blank" class="btn btn-primary" type="button"><span>Validar Archivo</span></button>
+                                </div>                                
+                                <div v-else>
+                                    <button class="btn btn-primary" disabled="disabled"><span>Validar Archivo</span></button>
+                                </div>
+                            </div> 
+                            <div>                      
+                                <div v-if="archivoValidado=='si'">
+                                    <button type="button" data-bs-toggle="modal" data-bs-target="#exampleModal" class="btn btn-primary"><span>Previsualizar</span></button>
+                                </div>                          
+                                <div v-else>
+                                    <button  class="btn btn-primary" disabled="disabled"><span>Previsualizar</span></button>
+                                </div>   
+                            </div> 
+                            <div>
+                                <div v-if="archivoValidado=='si' && previsualizacion=='si'">
+                                    <button type="button" class="btn btn-primary" @click="enviarCampaniasPorMailOpcion1"><span>Enviar solicitudes</span></button>
+                                </div>  
+                                <div v-else>
+                                    <button  class="btn btn-primary" disabled="disabled"><span>Enviar solicitudes</span></button>
+                                </div>  
+                            </div>      
+                        </div>                     
+                </div>              
+                        <div class="divSecciones" v-show="tipoIngresoReferentes==='mail'" v-on:click="previsualizacionNo()">
+                            <div class="input-group">
+                                <div class="input-group-prepend">
+                                    <span class="input-group-text">Ingrese correo referente</span >
+                                </div> 
+                                <input class="form-control" v-model="mailReferente" id="mailReferente" name="mailReferente"  maxlength="30">
+                            </div>                         
+                                <div v-show="nombreRefeenteEncontrado" class="input-group">                             
+                                    <div v-if="nombreRefeenteEncontrado=='vacio'">
+                                        <div class="input-group">    
+                                            <div class="input-group-prepend">
+                                                <span class="input-group-text">Ingrese nombre</span>
+                                            </div> 
+                                            <input class="form-control" v-model="nombreReferente" id="nombreReferente" name="nombreReferente"  maxlength="30">
+                                        </div>        
+                                    </div>
+                                    <div v-else>
+                                        <div class="input-group">
+                                            <div class="input-group-prepend">
+                                                <span class="input-group-text">Nombre referente</span>                                    
+                                            </div> 
+                                            <span class="form-control">{{nombreReferente}}</span>
+                                        </div>    
+                                    </div>
+                                </div>    
+                                <div class="split"></div> 
+                                <div class="BotonesEnvio" > 
+                                    <div>
+                                        <div v-if="mailReferente">
+                                            <button type="button" class="btn btn-primary" @click="buscarReferente"><span>Buscar referente</span></button>
+                                        </div>
+                                        <div v-else>
+                                            <button type="button" class="btn btn-primary" disabled="disabled"><span>Buscar referente</span></button>
+                                        </div>
+                                    </div>
+                                    <div>                
+                                        <div v-if="nombreReferente" >
+                                            <button type="button" data-bs-toggle="modal" data-bs-target="#exampleModal" class="btn btn-primary"><span>Previsualizar</span></button>
+                                        </div>                          
+                                        <div v-else>
+                                            <button  class="btn btn-primary" disabled="disabled"><span>Previsualizar</span></button>
+                                        </div>   
+                                    </div>
+                                    <div>
+                                        <div v-if="previsualizacion=='si' && nombreReferente">
+                                            <button type="button" @click="enviarCampaniasPorMailOpcionEnvio2" class="btn btn-primary"><span>Enviar solicitud</span></button>
+                                        </div> 
+                                        <div v-else>
+                                            <button type="button" class="btn btn-primary" disabled="disabled"><span>Enviar solicitud</span></button>
+                                        </div>  
+                                    </div>         
+                                </div>                
+                        </div>                        
+                        <!-- Cuerpo del Modal previsualizar-->
+                        <div class="modal fade" id="exampleModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+                            <div class="modal-dialog" role="document">
+                            <div class="modal-content">
+                                <div class="modal-header">
+                                    <div style="background-color:transparent;">
+                                        <div class="block-grid" style="Margin: 0 auto; min-width: 320px; max-width: 600px; overflow-wrap: break-word; word-wrap: break-word; word-break: break-word; background-color: #ecedef; border-bottom:0px solid #FFFFFF">
+                                            <div style="border-collapse: collapse;display: table;width: 100%;background-color:#ecedef;">
+                                                <div class="col num12" style="min-width: 320px; max-width: 600px; display: table-cell; vertical-align: top; width: 600px;">
+                                                <div style="width:100% !important;">
+                                                    <div style="border-top:0px solid transparent; border-left:0px solid transparent; border-bottom:0px solid transparent; border-right:0px solid transparent; padding-top:0px; padding-bottom:0px; padding-right: 0px; padding-left: 0px;">
+                                                    <div  class="img-container left fixedwidth" style="padding-right: 0px;padding-left: 0px;">
+                                                        <div style="font-size:1px;line-height:25px">&nbsp;</div><img alt="RC"  class="left fixedwidth" src="./img/footerMail.JPG" style="text-decoration: none; -ms-interpolation-mode: bicubic; border: 0; height: auto; width: 100%; max-width: 600px; display: block;" width="600">
+                                                        <div style="font-size:1px;line-height:25px">&nbsp;</div>
+                                                    </div>
+                                                    </div>
+                                                </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="modal-body">
+                                        <div style="background-color:transparent;">
+                                                    <div class="block-grid" style="Margin: 0 auto; min-width: 320px; max-width: 600px; overflow-wrap: break-word; word-wrap: break-word; word-break: break-word; background-color: #FFFFFF;">
+                                                        <div style="border-collapse: collapse;display: table;width: 100%;background-color:#FFFFFF;">
+                                                            <div class="col num12" style="min-width: 320px; max-width: 600px; display: table-cell; vertical-align: top; width: 600px;">
+                                                                <div style="width:100% !important;">
+                                                                    <div style="border-top:0px solid transparent; border-left:0px solid transparent; border-bottom:0px solid transparent; border-right:0px solid transparent; padding-top:35px; padding-bottom:40px; padding-right: 35px; padding-left: 35px;">
+                                                                    <div  class="img-container center fixedwidth" style="padding-right: 0px;padding-left: 0px;">
+                                                                    </div>
+                                                                    <div style="color:#555555;padding-top:20px;padding-right:10px;padding-bottom:0px;padding-left:10px;">
+                                                                    <div style="font-size: 12px; line-height: 1.5; color: #555555">
+                                                                    <p style="text-align:right"><strong>Buenos Aires, (fecha de envio)</strong></p>
+                                                                    <p style="font-size:12px">Estimado (nombre referente)</p>
+                                                                    
+                                                                    <p style="font-size: 10px; line-height: 1.5;  margin: 0;">Por medio de la presente lo invitamos a participar de la presentación de ofertas para</p>
+                                                                    <p style="font-size: 10px; line-height: 1.5;  margin: 0; text-align:center;"><strong>{{campaniaSeleccionada}}</strong></p>
+                                                                    <p style="font-size: 10px; line-height: 1.5;  margin: 0;">&nbsp;</p>
+                                                                    <p style="font-size: 10px; line-height: 1.5;  margin: 0;">{{cuerpoMail}} </p>
+                                                                    <p style="font-size: 10px; line-height: 1.5;  margin: 0;">&nbsp;</p>
+                                                                    <p style="font-size: 10px; line-height: 1.5;  margin: 0;">Para ir a la campaña haga click aqui.  </p>
+                                                                    <p style="font-size: 10px; line-height: 1.5;  margin: 0;">&nbsp;</p>
+                                                                    <p style="font-size: 10px; line-height: 1.5;  margin: 0;">&nbsp;</p>
+                                                                    <p style="font-size: 10px; line-height: 1.5;  margin: 0;">Atentamente.</p>
+                                                                    </div>
+                                                                    </div>
+                                                                    </div>
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                        </div>
+                                        <div style="background-color:transparent;">
+                                            <div class="block-grid two-up no-stack" style="Margin: 0 auto; min-width: 320px; max-width: 600px; overflow-wrap: break-word; word-wrap: break-word; word-break: break-word; background-color: #83bcf3;">
+                                            <div style="border-collapse: collapse;display: table;width: 100%;background-color:#83bcf3;">                                
+                                                <div class="col num12" style="max-width: 320px; min-width: 300px; display: table-cell; vertical-align: top; width: 300px;">
+                                                    <div style="width:100% !important;">            
+                                                        <div style="border-top:0px solid transparent; border-left:0px solid transparent; border-bottom:0px solid transparent; border-right:0px solid transparent; padding-top:15px; padding-bottom:15px; padding-right: 0px; padding-left: 25px;">
+                                                            <div style="color:#F8F8F8;font-family:'Rubik', Arial, 'Helvetica Neue', Helvetica, sans-serif;line-height:1.2;padding-top:10px;padding-right:10px;padding-bottom:10px;padding-left:10px;">
+                                                                <div style="font-size: 14px; line-height: 1.2; font-family: 'Rubik', Arial, 'Helvetica Neue', Helvetica, sans-serif; color: #F8F8F8;">
+                                                                <p style="font-size: 14px; line-height: 1.2; margin: 0;">Av.Mitre 1000 - Avellaneda<br>
+                                                                Tel: (011) 5555-0000
+                                                                </p>
+                                                                </div>
+                                                            </div>            
+                                                        </div>            
+                                                    </div>
+                                                </div>                                             
+                                            </div> 
+                                            </div>
+                                        </div> 
+                                </div>
+                                <div class="modal-footer">
+                                <button type="button" class="btn btn-secondary" v-on:click="previsualizacionNo()"data-bs-dismiss="modal">Modificar</button>
+                                <button type="button" class="btn btn-secondary" v-on:click="previsualizacionOk()" data-bs-dismiss="modal">Continuar</button>
+                                </div>
+
+                            </div>
+                            </div>
+                        </div>
+                        <!-- Cuerpo del Modal explicativo para subir archivo .csv-->
+                        <div class="modal fade w-100" id="modalExplicativo" tabindex="-1" role="dialog" aria-labelledby="modalExplicativoLabel" aria-hidden="true">
+                            <div class="modal-dialog modal-lg" role="document">
+                            <div class="modal-content">
+                                <div class="modal-header d-flex flex-column">
+                                        <p class="text-center">Generar archivo</p>                                                                                 
+                                </div>
+                                <div class="modal-body">
+                                    <p class="text-align-left">1)Abrir una hoja de excel nueva</p>
+                                    <p class="text-left">2)Escribir mail referente en Columna A y nombre referente en Columna B</p>                                    
+                                    <div class="text-center"><img src="img/Instructivo1.JPG"></div>                                    
+                                    <p>3)Archivo => Guardar Como => Elegir una ubicacion donde guardar el archivo</p> 
+                                    <p>Nombre: "cualquiernombre.csv" Tipo: CSV (Delimitado por comas)(*.CSV)</p>
+                                    <p>Guardar => Aceptar => Si.</p> 
+                                    <p>4)Una vez generado el archivo, insertarlo en el formulario y tocar boton "Validar Archivo"</p>       
+                                    <p>Ejemplo de combinaciones correcta e incorrectas</p> 
+                                    <div class="text-center"><img src="img/Instructivo2.JPG"></div>   
+                                    <p>Si uno de los campos es erroneo, no validará el archivo , en caso de error, chequee los datos.</p>                                                                                            
+                                </div>
+                                <div class="modal-footer">                                
+                                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Entendido</button>
+                                </div>
+                            </div>
+                            </div>
+                        </div> 
+                    </div>
+                </div>
+            </div>
+            </form> 
+            </div>                   
+    </div> 
+    </main>
+    <footer>
+        <div class="footer-bottom">
+            <div class="container">
+                <div class="row">
+                    <div class="cohort col-md-12">
+                        <div class="footer-site-info">2021 © <a href="https://github.com/damianzamora"
+                                target="_blank">Zamora Damian</a></div>
+                    </div>
+                    <div class="col-md-12">
+                        <div id="footer-navigation" class="site-navigation footer-navigation centered-box"
+                            role="navigation">
+                            <ul id="footer-menu" class="nav-menu styled clearfix inline-inside">                                
+                                <li id="menu-item-27"
+                                    class="menu-item menu-item-type-custom menu-item-object-custom menu-item-27">
+                                    <a href="damian.zamora@hotmail.com">Contact Me</a>
+                                </li>
+                            </ul>
+                        </div>
+                    </div>                    
+                </div>
+            </div>
+        </div>
+    </footer>    
+        <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.1/dist/js/bootstrap.bundle.min.js" integrity="sha384-gtEjrD/SeCtmISkJkNUaaKMoLD0//ElJ19smozuHV6z3Iehds+3Ulb9Bn9Plx0x4" crossorigin="anonymous"></script>
+        <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
+        <script src="//cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+        <script src="https://unpkg.com/vue@next"></script>
+        <script src="js/panelcampanias.js"></script>  
+</body>
+</html>
+

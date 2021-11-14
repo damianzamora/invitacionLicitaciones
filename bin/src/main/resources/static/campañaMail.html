@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Envio de licitaciones</title>
+    <link rel="stylesheet" href="css/index.css">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.1/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-+0n0xVW2eSR5OomGNYDnhzAbDsOXxcvSN1TPprVMTNDbiYZCxYbOOl7+AMvyTG2x" crossorigin="anonymous">
+</head>
+<body id="app">
+    <header >        
+    </header>
+    <main >
+        <div class="divManagerPrincipal">
+            <div class="divAddUpload">
+                <h2>Bienvenido</h2>
+                <h3>Aquí podra ver y descargar detalles de la compra.</h3>
+            </div>
+            <div class="divManagerMerch">              
+                <div class="formAdd">
+                    <template v-if="campañaDelProveedor">
+                        <table class="table table-striped w-100" >
+                            <thead >
+                                <tr>  
+                                    <th class="text-center">Nombre de Campaña</th>                   
+                                    <th class="text-center">Descripcion</th>  
+                                    <th></th> 
+                                </tr>                                               
+                            </thead>
+                            <tbody>
+                                <tr >                                        
+                                    <td data-label="Comment" class="text-center">{{campañaDelProveedor.titulo}}</td>                          
+                                    <td data-label="Comment" class="text-center">{{campañaDelProveedor.descripcion}}</td>   
+                                    <td data-label="Accion"class="text-center"><button class="btn btn-secondary btn-sm" type="button" @click="generarPDF()">Descargar PDF</button></td>                                           
+                                </tr>
+                            </tbody>
+                        </table>
+                    </template>
+                    <template v-else>
+                        <div class="divCards d-flex flex-column align-items-center">
+                            <div class="text-center"><h2>Campaña no encontrada.</h2></div>                                    
+                        </div>    
+                    </template>
+                </div>
+            </div>
+        </div> 
+    </main>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.1/dist/js/bootstrap.bundle.min.js" integrity="sha384-gtEjrD/SeCtmISkJkNUaaKMoLD0//ElJ19smozuHV6z3Iehds+3Ulb9Bn9Plx0x4" crossorigin="anonymous"></script>
+    <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
+    <script src="//cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+    <script src="https://unpkg.com/vue@next"></script>
+    <script src="js/campañamail.js"></script>    
+</body>
+</html>
+
