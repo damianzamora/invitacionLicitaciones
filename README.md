@@ -14,16 +14,18 @@ El sistema puede manejar el seguimiento del envio de cada mail, desde que el pro
 Ese seguimiento se podra ver desde una de las opciones del sistema, y se podra buscar campañas mediante filtros de busquedas.
 
 
-Tecnologias
-Java8
-Maven
-SpringBoot
-JPA
-Base de datos
-*H2
+Tecnologias:
+-Java8
+-Maven
+-SpringBoot
+-JPA
+
+Base de datos:
+-H2
+
 Programas:
-*IntelliJ
-*VisualStudioCode
+-IntelliJ
+-VisualStudioCode
 
 Capturas del sistemas.
 
