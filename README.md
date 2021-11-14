@@ -15,11 +15,18 @@ Ese seguimiento se podra ver desde una de las opciones del sistema, y se podra b
 
 Sistema subido a Heroku: https://invitacionescampanias.herokuapp.com/panelcampanias.html
 
-Tecnologias:
+Tecnologias BackEnd:
 -Java8
 -Maven
 -SpringBoot
 -JPA
+
+Tecnologias FrontEnd:
+-HTML5
+-CSS3
+-BOOTSTRAP
+-VUE.JS3.0
+-AXIOS
 
 Base de datos:
 -H2
