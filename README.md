@@ -1,4 +1,4 @@
-# invitacion a licitaciones
+# Invitaciones a licitaciones
 
 Proyecto web ,el cual permite el manejo de invitaciones de proveedores a campañas, compra o licitacion.
 
@@ -13,6 +13,7 @@ El sistema puede manejar el seguimiento del envio de cada mail, desde que el pro
 
 Ese seguimiento se podra ver desde una de las opciones del sistema, y se podra buscar campañas mediante filtros de busquedas.
 
+Sistema subido a Heroku: https://invitacionescampanias.herokuapp.com/panelcampanias.html
 
 Tecnologias:
 -Java8
